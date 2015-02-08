@@ -1,3 +1,6 @@
+// This file consist of minor modification and enhancement to the original file
+// Copied from the Chromium sample
+
 // Copyright (c) 2011 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
