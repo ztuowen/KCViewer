@@ -14,5 +14,11 @@
   "web_accessible_resources":
   [
     "*"
-  ]
+  ],
+  "content_scripts": [
+  {
+  "matches": ["http://www.dmm.com/*"],
+  "js": ["dmmjump.js"]
+  }
+	]
 }
