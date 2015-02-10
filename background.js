@@ -71,9 +71,14 @@ function parseKCEntry(title,data)
         case "deck":
           old_dat.port.api_deck_port=apidat;
           break;
-        default:
-          old_dat[title] = apidat;
+        case "ndock":
+          old_dat.port.api_ndock=apidat;
+          break;
+        case "getship":
+          old_dat.kdock=apidat.api_kdock;
+          break;
       }
+      old_dat[title] = apidat;
       localStorage["svdraw"] = JSON.stringify(old_dat);
     }
   }
