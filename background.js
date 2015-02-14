@@ -7,9 +7,30 @@
 
 //Handle request from devtools 
 
-console.log(chrome.runtime.id);
-
 Port=null;
+svdraw = JSON.parse(localStorage["svdraw"]?localStorage["svdraw"]:"{}");
+apist = JSON.parse(localStorage["api_start2"]?localStorage["api_start2"]:"{}");
+
+function filterById(id,elem)
+{
+      return elem.api_id==id;
+}
+
+function findById(id,elems)
+{
+  for (var i=0;i<elems.length;++i)
+      if (elems[i].api_id == id)
+      return i;
+  return -1;
+}
+
+function replaceId(items,id,elems)
+{
+  for (var i=0;i<items.length;++i)
+  {
+    items[i][id] = findById(items[i][id],elems);
+  }
+}
 
 function bkgReqHandlr(request, sender, callback) {
 	  if (request.command == 'sendToConsole')
@@ -23,12 +44,12 @@ function bkgReqHandlr(request, sender, callback) {
 	  if (request.command == 'loadKCAPIData')
 	  {
 		  console.log(request.command);
-		  callback(JSON.parse(localStorage["api_start2"]));
+		  callback(apist);
 	  }
 	  if (request.command == 'loadKCData')
 	  {
 		  console.log(request.command);
-		  callback(JSON.parse(localStorage["svdraw"]));
+		  callback(svdraw);
 	  }
 	  if (request.command == 'clearKCCache')
 	  {
@@ -55,6 +76,20 @@ const tab_log = function(json_args) {
   console[args[0]].apply(console, Array.prototype.slice.call(args, 1));
 }
 
+
+idUpdate = new function(){
+  this.portship = function()
+  {
+    replaceId(svdraw.port.api_ship,"api_ship_id",apist.api_mst_ship);
+  }
+  this.mst = function()
+  {
+    replaceId(apist.api_mst_ship,"api_stype",apist.api_mst_stype);
+    replaceId(apist.api_mst_mission,"api_maparea_id",apist.api_mst_maparea);
+  }
+}
+
+
 function parseKCEntry(title,data)
 {
   var svd = eval(data);
@@ -63,23 +98,30 @@ function parseKCEntry(title,data)
     console.log(title + " successful");
     var apidat = svd.api_data;
     if (title == 'api_start2')
-      localStorage[title] = JSON.stringify(apidat);
+    {
+      apist = apidat;
+      idUpdate.mst();
+      localStorage["api_start2"] = JSON.stringify(apist);
+    }
     else {
-      var old_dat = JSON.parse(localStorage["svdraw"]?localStorage["svdraw"]:"{}");
+      svdraw[title] = apidat;
       switch (title)
       {
         case "deck":
-          old_dat.port.api_deck_port=apidat;
+          svdraw.port.api_deck_port=apidat;
           break;
         case "ndock":
-          old_dat.port.api_ndock=apidat;
+          svdraw.port.api_ndock=apidat;
           break;
         case "getship":
-          old_dat.kdock=apidat.api_kdock;
+          svdraw.kdock=apidat.api_kdock;
           break;
+        case "port":
+          idUpdate.portship();
+          break;
+
       }
-      old_dat[title] = apidat;
-      localStorage["svdraw"] = JSON.stringify(old_dat);
+      localStorage["svdraw"] = JSON.stringify(svdraw);
     }
   }
 }
