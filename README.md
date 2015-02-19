@@ -1,10 +1,11 @@
 # KCViewer
 KCViewer for kancolle using chrome devtools panel
 
+## Usage
 To use it you have to follow these three steps
 
 
-1.Download source:
+* Download source:
 
 git clone https://github.com/ztuowen/KCViewer.git
 
@@ -15,12 +16,12 @@ git submodule init
 git submodule update
 
 
-2.Add it to chrome:
+* Add it to chrome:
 
 chrome -> menu -> more tools -> extensions -> load unpacked extension -> select /path/to/KCViewer
 
 
-3.Run it:
+* Run it:
 
 open kancolle webpage in chrome -> open devtools(chrome -> menu -> more tools -> developer tools)
 
